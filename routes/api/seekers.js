@@ -16,7 +16,7 @@ router.post('/signup', async (req, res) => {
     console.log(firstname, lastname)
     let seeker = await Seeker.findOne({ email })
     if (seeker) {
-      return res.status(400).json({
+      return res.json({
         success: false,
         message: 'Account already exists!',
       })
@@ -36,7 +36,7 @@ router.post('/signup', async (req, res) => {
     const token = await jwt.sign(seeker.toJSON(), config.secretOrKey, {
       expiresIn: 36000,
     })
-    return res.status(200).json({
+    return res.json({
       success: true,
       message: 'The Job Seeker account is created successfully!',
       accessToken:"HS-" + token,
@@ -52,7 +52,7 @@ router.post('/signup', async (req, res) => {
     })
   } catch (err) {
     console.log(err)
-    res.status(500).json({
+    res.json({
       success: false,
       message: 'Internal Server Error',
       error: err
@@ -63,13 +63,14 @@ router.post('/signup', async (req, res) => {
 router.post('/signin', async (req, res) => {
   try{
     const { email, password } =req.body;
-
-    const seeker = await  Seeker.findOnce({email});
-    if(seeker && (await bcrypt.compare(password, seeker.password))){
-      const token = await jwt.sign(seeker, config.secretOrKey,{
+    const seeker = await Seeker.find({email});
+    if(seeker[0] && (await bcrypt.compare(password, seeker[0].toJSON().password))){
+      const token = await jwt.sign(seeker[0].toJSON(), config.secretOrKey,{
         expiresIn:360000
       });
-      return res.status(200).json({
+      console.log(email, password)
+
+      return res.json({
         success:true,
         message: seeker.firstname +"signed in successfully!",
         accessToken:"HS-" + token,
@@ -84,12 +85,13 @@ router.post('/signin', async (req, res) => {
         }
       })
     }
-    return res.status(400).json({
+    return res.json({
       success:false,
       message: "Invalid Credentials",
     })
   }catch(err){
-    res.status(500).json({
+    console.log(err)
+    res.json({
       success: false,
       message: 'Internal Server Error',
       error: err
