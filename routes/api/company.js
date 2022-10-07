@@ -13,8 +13,7 @@ const Company = require('../../models/Company')
 // @access Public
 router.post('/signup', async (req, res) => {
   try {
-    const { firstname, lastname, address, email, phone, password } = req.body
-    console.log(firstname, lastname)
+    const { name, address, ceo, vat, email, phone, password } = req.body
     let seeker = await Seeker.findOne({ email })
     let company = await Company.findOne({ email })
     if (seeker) {
@@ -29,33 +28,35 @@ router.post('/signup', async (req, res) => {
         message: 'This email already exists in our system',
       })
     }
-    seeker = new Seeker({
-      firstname,
-      lastname,
+    company = new Company({
+      name,
       address,
+      ceo,
+      vat,
       email,
       phone,
-      password,
+      password
     })
     const salt = await bcrypt.genSalt(10)
-    seeker.password = await bcrypt.hash(password, salt)
-    await seeker.save()
+    company.password = await bcrypt.hash(password, salt)
+    await company.save()
 
-    const token = await jwt.sign(seeker.toJSON(), config.secretOrKey, {
+    const token = await jwt.sign(company.toJSON(), config.secretOrKey, {
       expiresIn: 36000,
     })
     return res.json({
       success: true,
-      message: 'The Job Seeker account is created successfully!',
+      message: 'The Company account has been created successfully!',
       accessToken:"HS-" + token,
-      type:'seeker',
-      seeker: {
-        id: seeker._id,
-        firstname: seeker.firstname,
-        lastname: seeker.lastname,
-        addresss: seeker.address,
-        email: seeker.address,
-        phone: seeker.phone,
+      type:'company',
+      company: {
+        id: company._id,
+        name: company.name,
+        address: company.address,
+        ceo: company.ceo,
+        vat: company.vat,
+        email: company.email,
+        phone: company.phone,
       },
     })
   } catch (err) {

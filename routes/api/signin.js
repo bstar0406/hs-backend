@@ -11,54 +11,61 @@ const Company = require('../../models/Company')
 // @route POST api/babies/
 // @desc Register user
 // @access Public
-router.post('/signup', async (req, res) => {
-  try {
-    const { firstname, lastname, address, email, phone, password } = req.body
-    console.log(firstname, lastname)
-    let seeker = await Seeker.findOne({ email })
-    let company = await Company.findOne({ email })
-    if (seeker) {
-      return res.json({
-        success: false,
-        message: 'This email already exists in our system',
-      })
-    }
-    if (company) {
-      return res.json({
-        success: false,
-        message: 'This email already exists in our system',
-      })
-    }
-    seeker = new Seeker({
-      firstname,
-      lastname,
-      address,
-      email,
-      phone,
-      password,
-    })
-    const salt = await bcrypt.genSalt(10)
-    seeker.password = await bcrypt.hash(password, salt)
-    await seeker.save()
 
-    const token = await jwt.sign(seeker.toJSON(), config.secretOrKey, {
-      expiresIn: 36000,
-    })
+router.post('/', async (req, res) => {
+  try{
+    const { email, password } = req.body;
+    const seeker = await Seeker.find({email});
+    const company = await Company.find({email});
+    console.log(seeker, company)
+    if(seeker[0] && (await bcrypt.compare(password, seeker[0].toJSON().password))){
+      const token = await jwt.sign(seeker[0].toJSON(), config.secretOrKey,{
+        expiresIn:360000
+      });
+      console.log(email, password)
+
+      return res.json({
+        success:true,
+        message: seeker[0].firstname +" signed in successfully!",
+        accessToken:"HS-" + token,
+        type:'seeker',
+        seeker:{
+          id: seeker[0]._id,
+          firstname: seeker[0].firstname,
+          lastname: seeker[0].lastname,
+          addresss: seeker[0].address,
+          email: seeker[0].address,
+          phonenumber: seeker[0].phonenumber,
+        }
+      })
+    }
+    if(company[0] && (await bcrypt.compare(password, company[0].toJSON().password))){
+      const token = await jwt.sign(company[0].toJSON(), config.secretOrKey,{
+        expiresIn:360000
+      });
+      console.log(email, password)
+
+      return res.json({
+        success:true,
+        message: company[0].name +" signed in successfully!",
+        accessToken:"HS-" + token,
+        type:'company',
+        company:{
+          id: company[0]._id,
+          name: company[0].name,
+          address: company[0].address,
+          ceo: company[0].ceo,
+          vat: company[0].vat,
+          email: company[0].email,
+          phone: company[0].phone,
+        }
+      })
+    }
     return res.json({
-      success: true,
-      message: 'The Job Seeker account is created successfully!',
-      accessToken:"HS-" + token,
-      type:'seeker',
-      seeker: {
-        id: seeker._id,
-        firstname: seeker.firstname,
-        lastname: seeker.lastname,
-        addresss: seeker.address,
-        email: seeker.address,
-        phone: seeker.phone,
-      },
+      success:false,
+      message: "Unregistered user or wrong password",
     })
-  } catch (err) {
+  }catch(err){
     console.log(err)
     res.json({
       success: false,
@@ -67,7 +74,6 @@ router.post('/signup', async (req, res) => {
     })
   }
 })
-
 router.get('/', async (req, res) => {
 
 })
