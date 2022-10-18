@@ -1,0 +1,88 @@
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+// Create Schema
+const SeekerSchema = new Schema({
+  startWorkDate:{
+    type:String,
+    required:true
+  },
+  duty:{
+    type:String,
+    required:true
+  },
+  paymentTerm:{
+    type:String,
+    required:true
+  },
+  currency:{
+    type:String,
+    required:true
+  },
+  amount:{
+    type:String,
+    required:true
+  },
+  hours:{
+    type:String,
+    required:true
+  },
+  benefit:{
+    type:String,
+    required:true
+  },
+  dayOfWeek:{
+    type:String,
+    required:true
+  },
+  breakMinutes:{
+    type:String,
+    required:true
+  },
+  hourInWeek:{
+    type:String,
+    required:true
+  },
+  workingCity:{
+    type:String,
+    required:true
+  },
+  startDate:{
+    type:String,
+    required:true
+  },
+  endDate:{
+    type:String,
+    required:true
+  },
+  terminaton:{
+    type:String,
+    required:true
+  },
+  governingLaw:{
+    type:String,
+    required:true
+  },
+  dispute:{
+    type:String,
+    required:true
+  },
+  disputeCountry:{
+    type:String,
+    required:true
+  },
+  lawCountry:{
+    type:String,
+    required:true
+  },
+  description:{
+    type:String,
+    required:true
+  },
+  published:{
+    type:String,
+    required:true
+  },
+});
+
+module.exports = Seeker = mongoose.model("Seekers", SeekerSchema);
