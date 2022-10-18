@@ -37,19 +37,11 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-  Contract.find({},(err,contracts)=>{
-    if(err){
-      res.json({
-        success:false,
-        message:'Server Error'
-      })
-    }else{
-      res.json({
-        success:true,
-        message:'Got all contract of this company',
-        contracts:contracts
-      })
-    }
+  let contracts =  await Contract.find({}).sort({createdAt:-1})
+  res.json({
+    success: true,
+    message: 'Contracts successfully',
+    contracts:contracts
   })
 })
 
