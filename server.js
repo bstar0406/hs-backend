@@ -23,6 +23,7 @@ app.use(
 app.use("/api/seekers", require("./routes/api/seekers"));
 app.use("/api/company", require("./routes/api/company"));
 app.use("/api/signin", require("./routes/api/signin"));
+app.use("/api/contract", require("./routes/api/contract"));
 app.use(express.static("./resources/assets"));
 // Serve static assets in production
 // if (process.env.NODE_ENV === "production") {

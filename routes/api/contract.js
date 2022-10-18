@@ -9,7 +9,7 @@ const Contract = require('../../models/Contract')
 // @route POST api/babies/
 // @desc Register user
 // @access Public
-router.post('/signup', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { contract  } = req.body
 
@@ -37,7 +37,20 @@ router.post('/signup', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-
+  Contract.find({},(err,contracts)=>{
+    if(err){
+      res.json({
+        success:false,
+        message:'Server Error'
+      })
+    }else{
+      res.json({
+        success:true,
+        message:'Got all contract of this company',
+        contract:contracts
+      })
+    }
+  })
 })
 
 router.get('/:id', async (req, res) => {

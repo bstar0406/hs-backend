@@ -2,87 +2,87 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 // Create Schema
-const SeekerSchema = new Schema({
+const ContractSchema = new Schema({
   startWorkDate:{
     type:String,
-    required:true
+    required:false
   },
   duty:{
     type:String,
-    required:true
+    required:false
   },
-  paymentTerm:{
+  paymentTerms:{
     type:String,
-    required:true
+    required:false
   },
   currency:{
     type:String,
-    required:true
+    required:false
   },
   amount:{
     type:String,
-    required:true
+    required:false
   },
   hours:{
     type:String,
-    required:true
+    required:false
   },
   benefit:{
     type:String,
-    required:true
+    required:false
   },
-  dayOfWeek:{
+  daysOfWeek:{
     type:String,
-    required:true
+    required:false
   },
   breakMinutes:{
     type:String,
-    required:true
+    required:false
   },
-  hourInWeek:{
+  hoursInWeek:{
     type:String,
-    required:true
+    required:false
   },
   workingCity:{
     type:String,
-    required:true
+    required:false
   },
   startDate:{
     type:String,
-    required:true
+    required:false
   },
   endDate:{
     type:String,
-    required:true
+    required:false
   },
   terminaton:{
     type:String,
-    required:true
+    required:false
   },
   governingLaw:{
     type:String,
-    required:true
+    required:false
   },
   dispute:{
     type:String,
-    required:true
+    required:false
   },
   disputeCountry:{
     type:String,
-    required:true
+    required:false
   },
   lawCountry:{
     type:String,
-    required:true
+    required:false
   },
   description:{
     type:String,
-    required:true
+    required:false
   },
   published:{
     type:String,
-    required:true
+    required:false
   },
 });
 
-module.exports = Seeker = mongoose.model("Seekers", SeekerSchema);
+module.exports = Contract = mongoose.model("Contracts", ContractSchema);
