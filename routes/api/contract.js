@@ -12,7 +12,7 @@ const Contract = require('../../models/Contract')
 router.post('/', async (req, res) => {
   try {
     const { contract  } = req.body
-
+    console.log(contract)
     let newContract = new Contract({
       ...contract
     })
@@ -47,7 +47,7 @@ router.get('/', async (req, res) => {
       res.json({
         success:true,
         message:'Got all contract of this company',
-        contract:contracts
+        contracts:contracts
       })
     }
   })
