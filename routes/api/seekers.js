@@ -53,7 +53,7 @@ router.post('/signup', async (req, res) => {
         id: seeker._id,
         firstname: seeker.firstname,
         lastname: seeker.lastname,
-        addresss: seeker.address,
+        address: seeker.address,
         email: seeker.address,
         phone: seeker.phone,
       },

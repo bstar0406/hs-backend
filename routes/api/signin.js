@@ -33,9 +33,9 @@ router.post('/', async (req, res) => {
           id: seeker[0]._id,
           firstname: seeker[0].firstname,
           lastname: seeker[0].lastname,
-          addresss: seeker[0].address,
-          email: seeker[0].address,
-          phonenumber: seeker[0].phonenumber,
+          address: seeker[0].address,
+          email: seeker[0].email,
+          phone: seeker[0].phone,
         }
       })
     }

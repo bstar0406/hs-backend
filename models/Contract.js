@@ -3,6 +3,32 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const ContractSchema = new Schema({
+  companyId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Companies"
+  },
+  seekerID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Seekers"
+  },
+  companyRating:{
+    type:Number,
+    required:false,
+    default:-1
+  },
+  companyReview:{
+    type:String,
+    required:false
+  },
+  seekerRating:{
+    type:Number,
+    required:false,
+    default:-1
+  },
+  seekerReview:{
+    type:String,
+    required:false
+  },
   startWorkDate:{
     type:String,
     required:false

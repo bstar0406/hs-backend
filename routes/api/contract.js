@@ -9,6 +9,88 @@ const Contract = require('../../models/Contract')
 // @route POST api/babies/
 // @desc Register user
 // @access Public
+router.post('/:id', async (req, res) => {
+  try {
+    const { seekerID  } = req.body
+    console.log(req.params.id, seekerID)
+    let contract =  (await Contract.find({_id:req.params.id}))[0]
+    contract.seekerID = seekerID;
+    contract.published = "done"
+
+    await contract.save()
+    const token = await jwt.sign(contract.toJSON(), config.secretOrKey, {
+      expiresIn: 36000,
+    })
+    return res.json({
+      success: true,
+      message: contract.published==='1'?'The contract is created successfully.':'The contract is saved.',
+      accessToken:"HS-" + token,
+      contract:contract
+    })
+  } catch (err) {
+    console.log(err)
+    res.json({
+      success: false,
+      message: 'Internal Server Error',
+      error: err
+    })
+  }
+})
+
+router.post('/review/company/:id', async (req, res) => {
+  try {
+    const { rating, review  } = req.body
+    let contract =  (await Contract.find({_id:req.params.id}))[0]
+    contract.companyRating = Math.round(rating);
+    contract.companyReview = review
+
+    await contract.save()
+    const token = await jwt.sign(contract.toJSON(), config.secretOrKey, {
+      expiresIn: 36000,
+    })
+    return res.json({
+      success: true,
+      message: contract.published==='1'?'The contract is created successfully.':'The contract is saved.',
+      accessToken:"HS-" + token,
+      contract:contract
+    })
+  } catch (err) {
+    console.log(err)
+    res.json({
+      success: false,
+      message: 'Internal Server Error',
+      error: err
+    })
+  }
+})
+
+router.post('/review/seeker/:id', async (req, res) => {
+  try {
+    const { rating, review  } = req.body
+    let contract =  (await Contract.find({_id:req.params.id}))[0]
+    contract.seekerRating = Math.round(rating);
+    contract.seekerReview = review
+
+    await contract.save()
+    const token = await jwt.sign(contract.toJSON(), config.secretOrKey, {
+      expiresIn: 36000,
+    })
+    return res.json({
+      success: true,
+      message: contract.published==='1'?'The contract is created successfully.':'The contract is saved.',
+      accessToken:"HS-" + token,
+      contract:contract
+    })
+  } catch (err) {
+    console.log(err)
+    res.json({
+      success: false,
+      message: 'Internal Server Error',
+      error: err
+    })
+  }
+})
+
 router.post('/', async (req, res) => {
   try {
     const { contract  } = req.body
@@ -37,7 +119,8 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
-  let contracts =  await Contract.find({}).sort({createdAt:-1})
+  let contracts =  await Contract.find({published:'submit'}).populate('companyId').populate('seekerID').sort({createdAt:-1})
+  console.log(contracts)
   res.json({
     success: true,
     message: 'Contracts successfully',
@@ -46,42 +129,34 @@ router.get('/', async (req, res) => {
 })
 
 router.get('/:id', async (req, res) => {
-  // try {
-  //   const baby = await Baby.findById(req.params.id)
-  //     .populate({
-  //       path: 'literId',
-  //       populate: {
-  //         path: 'literDad',
-  //         populate: {
-  //           path: 'petTypeId',
-  //         },
-  //       },
-  //     })
-  //     .populate('petDescriptionId')
-  //   res.json({
-  //     success: true,
-  //     baby: {
-  //       babyId: baby._id,
-  //       literId: baby.literId,
-  //       babyName: baby.babyName,
-  //       babyDOB: baby.babyDOB,
-  //       babyGender: baby.babyGender,
-  //       petDescriptionId: baby.petDescriptionId,
-  //       babyPic1: baby.babyPic1,
-  //       babyPic2: baby.babyPic2,
-  //       babyPic3: baby.babyPic3,
-  //       babyPic4: baby.babyPic4,
-  //       babyPic5: baby.babyPic5,
-  //       babyPic6: baby.babyPic6,
-  //       babyPrice: baby.babyPrice,
-  //       babyStatus: baby.babyStatus,
-  //     },
-  //   })
-  // } catch (err) {
-  //   console.error(err.message)
-  //   res.status(500).send('Server Error')
-  // }
+  let contracts =  await Contract.find({companyId:req.params.id}).populate('companyId').populate('seekerID').sort({createdAt:-1})
+  console.log(contracts)
+  res.json({
+    success: true,
+    message: 'Contracts successfully',
+    contracts:contracts
+  })
 })
+router.get('/seeker/:id', async (req, res) => {
+  let contracts =  await Contract.find({seekerID:req.params.id}).populate('companyId').populate('seekerID').sort({createdAt:-1})
+  console.log(contracts)
+  res.json({
+    success: true,
+    message: 'Contracts successfully',
+    contracts:contracts
+  })
+})
+
+router.get('detail/:id', async (req, res) => {
+  let contracts =  await Contract.find({id:req.params.id}).populate('companyId').sort({createdAt:-1})
+  console.log(contracts)
+  res.json({
+    success: true,
+    message: 'Contracts successfully',
+    contract:contracts[0]
+  })
+})
+
 
 router.delete('/:id', async (req, res) => {
   // try {
